@@ -49,3 +49,8 @@ data/*.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Test and demo files
+test_web_app.py
+demo_web.py
+preview.html

@@ -457,11 +457,11 @@ HTML_TEMPLATE = """
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">풍속</div>
-                    <div class="detail-value">${data.wind_speed.toFixed(1)} m/s</div>
+                    <div class="detail-value">${(data.wind_speed || 0).toFixed(1)} m/s</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">풍향</div>
-                    <div class="detail-value">${data.wind_direction_korean}</div>
+                    <div class="detail-value">${data.wind_direction_korean || 'N/A'}</div>
                 </div>
             `;
             
@@ -485,12 +485,12 @@ HTML_TEMPLATE = """
             comparisonContent.innerHTML = `
                 <div class="comparison-item">
                     <span class="comparison-label">7일 평균 기온</span>
-                    <span class="comparison-value">${comp.historical_avg_temp.toFixed(1)}°C</span>
+                    <span class="comparison-value">${(comp.historical_avg_temp || 0).toFixed(1)}°C</span>
                 </div>
                 <div class="comparison-item">
                     <span class="comparison-label">현재 vs 평균</span>
                     <span class="comparison-value">
-                        ${Math.abs(tempDiff).toFixed(1)}°C ${tempDiff > 0 ? '높음' : '낮음'}
+                        ${Math.abs(tempDiff || 0).toFixed(1)}°C ${tempDiff > 0 ? '높음' : '낮음'}
                         <span class="trend-indicator">${trendEmoji}</span>
                     </span>
                 </div>
@@ -615,6 +615,11 @@ def get_history(city: str):
             return jsonify({'error': 'Storage not configured'}), 500
         
         days = request.args.get('days', default=7, type=int)
+        
+        # Validate days parameter
+        if days < 1 or days > 30:
+            return jsonify({'error': 'Days must be between 1 and 30'}), 400
+        
         historical = storage.get_recent_weather(city, days=days)
         
         # If insufficient historical data, simulate some
@@ -727,10 +732,11 @@ def main():
     print("\n" + "=" * 60 + "\n")
     
     # Run Flask app
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     app.run(
         host='0.0.0.0',  # Listen on all interfaces for mobile access
         port=5000,
-        debug=True
+        debug=debug_mode
     )
 
 
