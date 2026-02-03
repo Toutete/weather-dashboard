@@ -168,7 +168,9 @@ HISTORICAL_DAYS=7
 
 ## Usage Examples 📖
 
-### Basic Usage
+### CLI (Command Line Interface)
+
+The traditional command-line interface for terminal users.
 
 ```bash
 # Use default city from configuration
@@ -298,6 +300,186 @@ All errors are displayed with clear, actionable messages.
 
 3. **Cache Duration**: Default 30 minutes. Adjust `CACHE_DURATION_MINUTES` in `.env` as needed.
 
+## Web Application 🌐
+
+### Overview
+
+The Weather Dashboard now includes a **mobile-friendly web interface** that provides an elegant, responsive way to check weather information from any device!
+
+### Features
+
+- 📱 **Mobile-First Design**: Optimized for smartphones, tablets, and desktops
+- 🎨 **Modern UI**: Beautiful gradient backgrounds and glass-morphism effects
+- ⚡ **Real-time Data**: Instant weather updates via RESTful API
+- 📊 **Historical Comparison**: Compare current weather with 7-day averages
+- 🌡️ **Detailed Information**: Temperature, humidity, wind speed, and direction
+- 🔍 **Smart Search**: City search with Enter key support
+- 🎭 **Weather Emojis**: Visual weather condition indicators
+- 📈 **Trend Analysis**: Temperature trends and unusual pattern detection
+
+### Quick Start
+
+#### 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+The web application requires Flask and Flask-CORS (automatically included in `requirements.txt`).
+
+#### 2. Configure API Key
+
+Make sure your `.env` file is set up with your OpenWeatherMap API key:
+
+```env
+OPENWEATHER_API_KEY=your_actual_api_key_here
+```
+
+#### 3. Run the Web Server
+
+```bash
+python web_app.py
+```
+
+#### 4. Access the Dashboard
+
+**On the same computer:**
+```
+http://localhost:5000
+```
+
+**From mobile devices (same WiFi network):**
+```
+http://<your-computer-ip>:5000
+```
+
+### Finding Your Computer's IP Address
+
+**Windows:**
+```bash
+ipconfig
+# Look for "IPv4 Address" under your active network adapter
+```
+
+**Mac/Linux:**
+```bash
+ifconfig
+# Look for "inet" address under your active network adapter (usually en0 or wlan0)
+```
+
+Or on Mac:
+```bash
+ipconfig getifaddr en0
+```
+
+**Example:**
+If your IP is `192.168.1.100`, access from mobile at: `http://192.168.1.100:5000`
+
+### Using the Web Interface
+
+1. **Search for a City**: Enter any city name (e.g., "Seoul", "Tokyo", "New York")
+2. **Press Enter or Click Search**: Weather data loads instantly
+3. **View Current Weather**: 
+   - Large temperature display
+   - Weather emoji and description
+   - Feels-like temperature
+   - Humidity percentage
+   - Wind speed and direction (in Korean!)
+4. **Compare with History**: Automatically shows comparison with 7-day average
+5. **Unusual Patterns**: Alerts for extreme weather conditions
+
+### API Endpoints
+
+The web application exposes RESTful API endpoints:
+
+#### Get Current Weather
+```http
+GET /api/weather/<city>
+```
+
+**Example Response:**
+```json
+{
+  "city": "Seoul",
+  "country": "KR",
+  "temperature": 15.5,
+  "feels_like": 14.2,
+  "humidity": 65,
+  "wind_speed": 3.5,
+  "wind_direction_korean": "북동",
+  "weather_emoji": "☀️",
+  "weather_description": "clear sky"
+}
+```
+
+#### Get Historical Data
+```http
+GET /api/history/<city>?days=7
+```
+
+#### Get Weather Comparison
+```http
+GET /api/compare/<city>
+```
+
+**Example Response:**
+```json
+{
+  "comparison": {
+    "historical_avg_temp": 13.2,
+    "temp_difference": 2.3,
+    "trend": "warmer"
+  },
+  "unusual_patterns": [
+    "🔥 Hottest temperature recorded (15.5°C)"
+  ]
+}
+```
+
+### Mobile Access Tips
+
+1. **Same WiFi Network**: Ensure your phone and computer are on the same WiFi network
+2. **Firewall**: You may need to allow Python/Flask through your firewall
+3. **Add to Home Screen**: 
+   - **iOS**: Safari → Share → "Add to Home Screen"
+   - **Android**: Chrome → Menu → "Add to Home screen"
+4. **Bookmark**: Save the URL for quick access
+
+### Technology Stack
+
+- **Backend**: Flask 3.0+
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Styling**: CSS Grid, Flexbox, CSS Animations
+- **Design**: Mobile-first responsive design
+- **API**: RESTful architecture
+- **CORS**: Enabled for cross-origin requests
+
+### Design Highlights
+
+- 🎨 **Gradient Background**: Purple-to-blue gradient for modern look
+- 💎 **Glass-morphism**: Semi-transparent cards with backdrop blur
+- ✨ **Animations**: Smooth fade-in and slide-up transitions
+- 📱 **Responsive Grid**: Adapts to any screen size
+- 🎯 **Touch-Friendly**: Large buttons and inputs for mobile
+- 🌈 **Color Scheme**: #667eea primary color with thoughtful accents
+
+### Troubleshooting Web App
+
+#### Cannot access from mobile
+- Verify both devices are on same WiFi network
+- Check firewall settings allow incoming connections on port 5000
+- Try using your computer's IP address instead of localhost
+- Ensure web server is running (check terminal for "Running on...")
+
+#### "API not configured" error
+- Make sure `.env` file exists with valid `OPENWEATHER_API_KEY`
+- Restart the web server after adding API key
+
+#### Slow response times
+- First request may be slower (API call)
+- Subsequent requests use cached data (30-minute cache)
+- Check your internet connection
+
 ## Troubleshooting 🔍
 
 ### "Invalid API key" error
@@ -317,12 +499,14 @@ All errors are displayed with clear, actionable messages.
 ## Contributing 🤝
 
 Contributions are welcome! Areas for improvement:
-- Add web dashboard using Flask/FastAPI
 - Implement charts using matplotlib/plotly
 - Add support for multiple weather APIs
 - Implement SQLite database storage
 - Add unit tests
 - Support for coordinates-based search in CLI
+- Dark mode toggle for web interface
+- PWA (Progressive Web App) features
+- Favorite cities with localStorage
 
 ## License 📄
 
