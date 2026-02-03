@@ -164,6 +164,9 @@ OPENWEATHER_API_KEY=your_actual_api_key_here
 DEFAULT_CITY=London
 CACHE_DURATION_MINUTES=30
 HISTORICAL_DAYS=7
+
+# Optional: Flask web app debug mode (set to true for development)
+FLASK_DEBUG=false
 ```
 
 ## Usage Examples 📖
